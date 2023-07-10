@@ -10,6 +10,7 @@ namespace HotelListingAPI.Data
                  
         }
          
+        //Adding tabels to db
         public DbSet<Hotel> hotels { get; set; }
 
         public DbSet<Country> Countries { get; set; }
