@@ -25,22 +25,9 @@ namespace HotelListingAPI.Data
                     Id= 1,
                     Name = "Jamaica",
                     ShortName = "JM"
-                },
-                new Country
-                {
-                    Id = 2,
-                    Name = "Greece",
-                    ShortName = "GR"
-                },
-                new Country
-                {
-                    Id = 3,
-                    Name = "Italy",
-                    ShortName = "IT"
                 }
-
-
                 );
+           
 
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel
@@ -50,26 +37,7 @@ namespace HotelListingAPI.Data
                     Address = "Negril",
                     CountryId= 1,
                     Rating = 4.5
-                },
-                 new Hotel
-                 {
-                     Id = 2,
-                     Name = "Comfort Suites",
-                     Address = "Goerge Town",
-                     CountryId = 2,
-                     Rating = 4.3
-                 },
-                  new Hotel
-                  {
-                      Id = 3,
-                      Name = "Grand Palladium",
-                      Address = "Nassua",
-                      CountryId = 3,
-                      Rating = 4
-                  }
-
-
-
+                }
 
                 );
         }
