@@ -4,6 +4,7 @@ using HotelListingAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelListingAPI.Migrations
 {
     [DbContext(typeof(HotelListingDbContext))]
-    partial class HotelListingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230711135553_AddedIdentity")]
+    partial class AddedIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,21 +117,9 @@ namespace HotelListingAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 31,
+                            Id = 1,
                             Name = "Jamaica",
                             ShortName = "JM"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Name = "Bahamas",
-                            ShortName = "BS"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            Name = "Cayman Island",
-                            ShortName = "CI"
                         });
                 });
 
@@ -156,32 +147,16 @@ namespace HotelListingAPI.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Hotels");
+                    b.ToTable("hotels");
 
                     b.HasData(
                         new
                         {
-                            Id = 5,
+                            Id = 1,
                             Address = "Negril",
-                            CountryId = 31,
+                            CountryId = 1,
                             Name = "Sandals Resort and Spa",
                             Rating = 4.5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Address = "Santorini",
-                            CountryId = 32,
-                            Name = "Sanotrini Spa",
-                            Rating = 4.0
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Address = "Negril",
-                            CountryId = 33,
-                            Name = "Sandals Resort and Spa",
-                            Rating = 4.2000000000000002
                         });
                 });
 
@@ -210,20 +185,6 @@ namespace HotelListingAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "42da8e3f-7029-42d8-98e3-20444dc69d9f",
-                            Name = "Adminstrator",
-                            NormalizedName = "ADMINSTRATOR"
-                        },
-                        new
-                        {
-                            Id = "7a87a846-387a-4ba1-99aa-f3125c45ce39",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -2,12 +2,16 @@
 using System.ComponentModel.DataAnnotations;
 using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
-namespace HotelListingAPI.Models.Country
+namespace HotelListingAPI.Models.Users
 {
-    public abstract class BaseCountryDto
+    public class ApiUserDto : LoginDto
     {
         [Required]
-        public string Name { get; set; }
-        public string ShortName { get; set; }
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+       
     }
 }

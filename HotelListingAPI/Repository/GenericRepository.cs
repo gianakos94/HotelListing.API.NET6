@@ -59,9 +59,5 @@ namespace HotelListingAPI.Repository
             await _context.SaveChangesAsync();
         }
 
-      
-
-
-     
     }
 }
