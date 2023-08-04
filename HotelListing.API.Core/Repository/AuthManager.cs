@@ -6,6 +6,8 @@ using HotelListingAPI.Models.Users;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Common;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,6 +22,7 @@ namespace HotelListingAPI.Repository
         private readonly IMapper _mapper;
         private readonly UserManager<ApiUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthManager> _logger;
         private ApiUser _user;
 
         
@@ -29,12 +32,12 @@ namespace HotelListingAPI.Repository
         
 
 
-        public AuthManager(IMapper mapper, UserManager<ApiUser> userManager, IConfiguration configuration)
+        public AuthManager(IMapper mapper, UserManager<ApiUser> userManager, IConfiguration configuration, ILogger<AuthManager> logger)
         {
             this._mapper = mapper;
             this._userManager = userManager;
             this._configuration = configuration;
-
+            this._logger = logger;
         }
 
         public  async Task<string> CreateRefreshToken()
@@ -89,26 +92,30 @@ namespace HotelListingAPI.Repository
 
         public async Task<AuthResponseDto> Login(LoginDto loginDto)
         {
+            _logger.LogInformation($"Looking for user with email {loginDto.Email}"); 
 
-                //Find the user
-                _user = await _userManager.FindByEmailAsync(loginDto.Email);
+            //Find the user
+            _user = await _userManager.FindByEmailAsync(loginDto.Email);
 
-                //Validation if the specific password matches to the User
-                bool isValidUser = await _userManager.CheckPasswordAsync(_user, loginDto.Password);
+            //Validation if the specific password matches to the User
+            bool isValidUser = await _userManager.CheckPasswordAsync(_user, loginDto.Password);
 
-                //If user is not or valid not succeed
-                if (_user == null || isValidUser == false)
-                {
-                    return null;
-                }
+            //If user is not or valid not succeed
+            if (_user == null || isValidUser == false)
+            {
+                _logger.LogWarning($"User with email {loginDto.Email} was not found");
+                return null;
+            }
 
-                var token = await GenerateToken();
-                return new AuthResponseDto
-                {
-                    Token = token,
-                    UserId = _user.Id,
-                    RefreshToken = await CreateRefreshToken()
-                };
+            var token = await GenerateToken();
+            _logger.LogInformation($"Token Generating succefylly for the {loginDto.Email} | Token : {token}");
+
+            return new AuthResponseDto
+            {
+                Token = token,
+                UserId = _user.Id,
+                RefreshToken = await CreateRefreshToken()
+            };
             
 
         }

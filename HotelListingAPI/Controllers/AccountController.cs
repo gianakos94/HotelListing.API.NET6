@@ -14,11 +14,13 @@ namespace HotelListingAPI.Controllers
     {
        
         private readonly IAuthManager _authManager;
+        private readonly ILogger<AccountController> _logger;
         
 
-        public AccountController(IAuthManager authManager)
+        public AccountController(IAuthManager authManager, ILogger<AccountController> logger)
         {
             this._authManager = authManager;
+            this._logger = logger;
           
         }
 
@@ -31,21 +33,37 @@ namespace HotelListingAPI.Controllers
 
         public async Task<ActionResult> Register([FromBody]ApiUserDto apiUserDto)
         {
-            var errors = await _authManager.Register(apiUserDto);
+            _logger.LogInformation($"Registration Attempt for {apiUserDto.Email}");
 
-            if (errors.Any()) 
+            
+            try
             {
-                foreach (var error in errors)
+                var errors = await _authManager.Register(apiUserDto);
+
+                if (errors.Any())
                 {
-                   ModelState.AddModelError(error.Code, error.Description);
-                    
+                    foreach (var error in errors)
+                    {
+
+                        ModelState.AddModelError(error.Code, error.Description);
+
+                    }
+
+                    return BadRequest(ModelState);
                 }
-                return BadRequest(ModelState);
+
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                 _logger.LogError(ex,$"Registration Attempt for {nameof(Register)} User Registration Attemp");
+
+                return Problem($"Something went wrong in the {nameof(Register)}",statusCode:500);
             }
 
-           return Ok();
-
-        }
+         }
+            
 
         // POST: api/Account/register/admin
         [HttpPost]
@@ -55,18 +73,33 @@ namespace HotelListingAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> RegisterAdmin([FromBody] ApiUserDto apiUserDto)
         {
-            var errors = await _authManager.RegisterAdmin(apiUserDto);
+            _logger.LogInformation($"Registration Admin Attempt for {apiUserDto.Email}");
 
-            if (errors.Any())
+           
+            try
             {
-                foreach (var error in errors)
-                {
-                    ModelState.AddModelError(error.Code, error.Description);
-                }
-                return BadRequest(ModelState);
-            }
+                var errors = await _authManager.Register(apiUserDto);
 
-            return Ok();
+                if (errors.Any())
+                {
+                    foreach (var error in errors)
+                    {
+                        _logger.LogWarning($"Register Adminstrator Attempt fail something goes wrong for {apiUserDto.Email}");
+                        ModelState.AddModelError(error.Code, error.Description);
+
+                    }
+                    return BadRequest(ModelState);
+                }
+
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Registration Attempt for {nameof(Register)} Adminstrator Registration Attemp");
+
+                return Problem($"Something went wrong in the {nameof(Register)}", statusCode: 500);
+            }
         }
 
 
@@ -80,15 +113,16 @@ namespace HotelListingAPI.Controllers
 
         public async Task<ActionResult> Login([FromBody] LoginDto loginDto)
         {
+
             var authResponse = await _authManager.Login(loginDto);
 
             if (authResponse == null)
             {
+                _logger.LogInformation($"Login Attempt fail something goes wrong for {loginDto.Email}");
                 return Unauthorized();
             }
 
             return Ok(authResponse);
-
         }
 
 
@@ -111,7 +145,6 @@ namespace HotelListingAPI.Controllers
             return Ok(authResponse);
 
         }
-
 
 
     }
