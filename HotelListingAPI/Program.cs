@@ -51,7 +51,9 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = JwtBearerDefaults.AuthenticationScheme
     });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+ 
+
+options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -68,6 +70,8 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
+
+    
 
 });
 
@@ -148,7 +152,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 
 app.MapHealthChecks("/healthcheck");
 

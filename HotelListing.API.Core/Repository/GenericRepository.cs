@@ -62,7 +62,10 @@ namespace HotelListingAPI.Repository
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            var result = await _context.Set<T>().ToListAsync();
+            
+
+            return result;
         }
 
         public async Task<PagedResult<TResult>> GetAllAsync<TResult>(QueryParameters queryParameters)
@@ -85,6 +88,7 @@ namespace HotelListingAPI.Repository
 
         public async Task<List<TResult>> GetAllAsync<TResult>()
         {
+            Console.WriteLine("bhka generic repo");
             return await _context.Set<T>()
                 .ProjectTo<TResult>(_mapper.ConfigurationProvider)
                 .ToListAsync();

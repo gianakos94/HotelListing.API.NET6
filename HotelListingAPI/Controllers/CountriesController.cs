@@ -25,7 +25,7 @@ namespace HotelListingAPI.Controllers
     
     public class CountriesController : ControllerBase
     {
-        //private readonly HotelListingDbContext _context;
+        
         private readonly IMapper _mapper;
         private readonly ICountriesRepository _countriesRepository;
         private readonly ILogger<CountriesController> _logger;
@@ -36,12 +36,11 @@ namespace HotelListingAPI.Controllers
             this._countriesRepository = countriesRepository;
             this._logger = logger;
         }
-
         // GET: api/Countries/GetAll
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<GetCountryDro>>> GetCountries()
         {
-
+            Console.WriteLine("bhka controller");
             //Take the info from database
            // var countries = await _countriesRepository.GetAllAsync();
 
@@ -51,9 +50,11 @@ namespace HotelListingAPI.Controllers
 
             //Refactor because the mapping is on Repo
             var countries = await _countriesRepository.GetAllAsync<GetCountryDro>();
+            Console.WriteLine("gyrisa return apo generic repo");
             return Ok(countries);
         }
 
+        
 
         // GET: api/Countries/?StartIndex=0&pagesize=25&PageNumber=1
         [HttpGet]
